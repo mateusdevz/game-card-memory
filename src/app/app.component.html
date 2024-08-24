@@ -7,7 +7,7 @@
         <div class="flip-card-front">
           {{ card.text }}
         </div>
-        <div class="flip-card-back">
+        <div class="flip-card-back" [ngClass]="{'flip-card-back--disabled': disabled}">
 
         </div>
       </div>

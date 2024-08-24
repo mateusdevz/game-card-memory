@@ -57,3 +57,7 @@
   align-items: center;
   justify-content: center;
 }
+
+.flip-card-back--disabled {
+  background-color: gray;
+}

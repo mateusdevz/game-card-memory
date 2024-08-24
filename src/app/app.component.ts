@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'game-card-memory';
+  disabled = false;
 
   cards = [
     {
@@ -116,8 +117,29 @@ export class AppComponent {
   ];
 
   handleClick(card: any): void {
-    card.selected = true;
-    console.log('---- ', card);
+    if(!this.disabled) {
+      card.selected = true;
+      this.checkIfTwoOpened();
+    }
+  }
 
+  checkIfTwoOpened(): void {
+    const areTwoOpened = this.cards.filter(card => card.selected).length === 2;
+
+    if(areTwoOpened) {
+      this.disabled = true;
+      this.setupGrid();
+    }
+  }
+
+  setupGrid(): void {
+    setTimeout(() => {
+      this.cards = this.cards.map(card => {
+        card.selected = false;
+        return card;
+      });
+
+      this.disabled = false;
+    }, 1800);
   }
 }
