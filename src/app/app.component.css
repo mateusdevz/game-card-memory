@@ -58,6 +58,10 @@
   justify-content: center;
 }
 
+.flip-card-back--win {
+  background-color: lightgreen;
+}
+
 .flip-card-back--disabled {
   background-color: gray;
 }

@@ -1,15 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+interface Card {
+  id: number;
+  text: string;
+  selected: boolean;
+  disabled?: boolean;
+}
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'game-card-memory';
-  disabled = false;
+  isGridDisabled = false;
+  cardsSelected: Card[] = [];
 
-  cards = [
+  cards: Card[] = [
     {
       id: 1,
       text: 'Mateus',
@@ -81,45 +89,32 @@ export class AppComponent {
       id: 7,
       text: 'Edileuza',
       selected: false
-    },
-
-    {
-      id: 8,
-      text: 'Daniel',
-      selected: false
-    },
-    {
-      id: 8,
-      text: 'Daniel',
-      selected: false
-    },
-
-    {
-      id: 9,
-      text: 'Neusa',
-      selected: false
-    },
-    {
-      id: 9,
-      text: 'Neusa',
-      selected: false
-    },
-    {
-      id: 10,
-      text: 'Jair',
-      selected: false
-    },
-    {
-      id: 10,
-      text: 'Jair',
-      selected: false
-    },
+    }
   ];
 
+  ngOnInit(): void {
+    this.shuffleCards();
+  }
+
+  shuffleCards(): void {
+    let currentIndex = this.cards.length;
+
+    while (currentIndex != 0) {
+
+      let randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      [this.cards[currentIndex], this.cards[randomIndex]] = [
+        this.cards[randomIndex], this.cards[currentIndex]];
+    }
+  }
+
   handleClick(card: any): void {
-    if(!this.disabled) {
+    if(!this.isGridDisabled && !card.disabled) {
+      this.cardsSelected.push(card);
       card.selected = true;
       this.checkIfTwoOpened();
+
     }
   }
 
@@ -127,7 +122,7 @@ export class AppComponent {
     const areTwoOpened = this.cards.filter(card => card.selected).length === 2;
 
     if(areTwoOpened) {
-      this.disabled = true;
+      this.isGridDisabled = true;
       this.setupGrid();
     }
   }
@@ -139,7 +134,28 @@ export class AppComponent {
         return card;
       });
 
-      this.disabled = false;
+      this.verifyIfWin();
+      this.isGridDisabled = false;
     }, 1800);
+  }
+
+  verifyIfWin(): void {
+    if(this.cardsSelected.length > 1) {
+      const first = this.cardsSelected[0];
+      const second = this.cardsSelected[1];
+
+      const isRight = first.text === second.text;
+
+      if(isRight) {
+        this.cards = this.cards.map(card => {
+          if(card.id === first.id) {
+            card.disabled = true;
+          }
+          return card;
+        })
+      }
+
+      this.cardsSelected = [];
+    }
   }
 }

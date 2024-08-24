@@ -7,8 +7,12 @@
         <div class="flip-card-front">
           {{ card.text }}
         </div>
-        <div class="flip-card-back" [ngClass]="{'flip-card-back--disabled': disabled}">
-
+        <div
+          class="flip-card-back"
+          [ngClass]="{
+            'flip-card-back--disabled': isGridDisabled,
+            'flip-card-back--win': card.disabled
+          }">
         </div>
       </div>
   </div>
